@@ -1,0 +1,29 @@
+version: '3'
+services:
+  postgres:
+    tty: true
+    image: postgres:16.1-alpine3.18
+    restart: always
+    environment:
+      POSTGRES_DB: "test"
+      POSTGRES_USER: "yerdaulet"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  auth:
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: postgres
+    depends_on:
+      - postgres
+
+
+volumes:
+  postgres:
+    driver: local
